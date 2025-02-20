@@ -40,7 +40,7 @@ public class SocialMediaController {
         if(accountRegistration !=null ){
           
           
-            ctx.status(201).json(accountRegistration); // Success response with 201 status
+            ctx.status(200).json(accountRegistration); // Success response with 201 status
         }else {
             ctx.status(400);
         }

@@ -18,50 +18,58 @@ import static Util.ConnectionUtil.getConnection;
 
 public class AccountDao {
 
-    public  Account createAccount( Account account){
-        PreparedStatement ps;
-        Connection con= ConnectionUtil.getConnection() ;
-        String username= account.getUsername();
-        String password =account.getPassword();
-        
-        if (username.equals("") && username.length()>=4){
-            try{
-                String sql= "insert into account (username, password) values(?,?)";
-                ps = con.prepareStatement(sql);
-                ps.setString(1,account.username);
-                ps.setString(2,account.password);
-                ps.executeUpdate();
-            }catch (Exception e){
-                e.getMessage();
+    public Account createAccount(Account account) {
+        // Validate username and password
+        if (account.getUsername().isEmpty() || account.getPassword().length() < 4) {
+            System.out.println("Invalid input: Username cannot be empty and password must be at least 4 characters.");
+            return null;
+        }
+
+        Connection con = ConnectionUtil.getConnection();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            // Check if the user already exists
+            String checkUserSql = "SELECT COUNT(*) FROM account WHERE username = ?";
+            ps = con.prepareStatement(checkUserSql);
+            ps.setString(1, account.getUsername());
+            rs = ps.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) {
+                System.out.println("User already registered.");
+                return null;
             }
-        }else {
-            System.out.println("user already register");            
+            rs.close();
+            ps.close(); // Close previous statement
+
+            // Insert new user and return generated keys
+            String sql = "INSERT INTO account (username, password) VALUES (?, ?)";
+            ps = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+            ps.setString(1, account.getUsername());
+            ps.setString(2, account.getPassword());
+            int rowsInserted = ps.executeUpdate();
+
+            if (rowsInserted > 0) {
+                rs = ps.getGeneratedKeys(); // Retrieve generated key
+                if (rs.next()) {
+                    int generatedId = rs.getInt(1);
+                    System.out.println("Account successfully created with ID: " + generatedId);
+                    return new Account(generatedId, account.getUsername(), account.getPassword());
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (con != null) con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-
-
-        return  null;
-    }
-
-
-    
-
-public Account getUser(Account account){
-        PreparedStatement ps ;
-        Connection con=ConnectionUtil.getConnection() ;
-        String sql = "select * from account where username= ? and password=?";
-
-        try{
-            ps=con.prepareStatement(sql);
-           ps.setString(1,account.username);
-           ps.setString(2,account.password);
-           ps.executeQuery();
-
-        }catch ( Exception e){
-e.getMessage();
-
-        }
-
 
         return null;
-}
+    }
 }
