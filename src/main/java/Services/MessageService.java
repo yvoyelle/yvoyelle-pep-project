@@ -33,7 +33,7 @@ public class MessageService {
     }
 
 
-    public boolean addMessage(Message message){
+    public Message createMessage(Message message){
 
         return messageDao.createMessage(message);
     }

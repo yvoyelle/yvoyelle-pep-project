@@ -24,6 +24,7 @@ public class SocialMediaController {
         app.post("register", this::userRegister);
 
         app.post("login", this::Login);
+        app.post("messages", this::createMessage);
 
         return app;
     }
@@ -59,6 +60,22 @@ public class SocialMediaController {
         }else{
             ctx.status(401);
         }
+
+    }
+
+
+    public void createMessage( Context ctx){
+        //Account account =ctx.bodyAsClass(Account.class);
+        //Account createMessage= accountService.addUser(account);
+        Message message = ctx.bodyAsClass(Message.class);
+       Message createMessage= messageService.createMessa(message);
+
+
+       if(createMessage !=null){
+           ctx.status(200).json(createMessage);
+       }else{
+           ctx.status(400);
+       }
 
     }
 }

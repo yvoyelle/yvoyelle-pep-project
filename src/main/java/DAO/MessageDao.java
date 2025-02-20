@@ -11,7 +11,7 @@ import java.sql.ResultSet;
 import static Util.ConnectionUtil.getConnection;
 
 public class MessageDao {
-    public  boolean createMessage( Message message){
+    public  Message createMessage( Message message){
         PreparedStatement ps;
         Connection con=ConnectionUtil.getConnection() ;
         String sql= "insert into message (posted_by, message_text,time_posted_epoch) values(?,?,?)";
@@ -22,11 +22,11 @@ public class MessageDao {
             ps.setString(2,message.message_text);
             ps.setLong(3,message.time_posted_epoch);
             ps.executeUpdate();
-            return  true;
+            
         }catch (Exception e){
             e.getMessage();
         }
-        return  false;
+        return  null;
     }
 
 
