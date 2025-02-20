@@ -18,30 +18,33 @@ import static Util.ConnectionUtil.getConnection;
 
 public class AccountDao {
 
+    
+
     public Account createAccount(Account account) {
+
+
         // Validate username and password
         if (account.getUsername().isEmpty() || account.getPassword().length() < 4) {
-            System.out.println("Invalid input: Username cannot be empty and password must be at least 4 characters.");
             return null;
         }
 
         Connection con = ConnectionUtil.getConnection();
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+        PreparedStatement ps  ;
+        ResultSet rs;
 
         try {
             // Check if the user already exists
-            String checkUserSql = "SELECT COUNT(*) FROM account WHERE username = ?";
-            ps = con.prepareStatement(checkUserSql);
+            String checkIfUserExist = "SELECT COUNT(*) FROM account WHERE username = ?";
+            ps = con.prepareStatement(checkIfUserExist);
+
             ps.setString(1, account.getUsername());
             rs = ps.executeQuery();
+
             if (rs.next() && rs.getInt(1) > 0) {
                 System.out.println("User already registered.");
                 return null;
             }
-            rs.close();
-            ps.close(); // Close previous statement
-
+           
             // Insert new user and return generated keys
             String sql = "INSERT INTO account (username, password) VALUES (?, ?)";
             ps = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -60,16 +63,38 @@ public class AccountDao {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (ps != null) ps.close();
-                if (con != null) con.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+        
         }
 
+        return null;
+    }
+
+
+
+
+
+
+
+     public Account getUser(Account account) {
+        String sql = "select * from account WHERE username = ? AND password = ?";
+        
+        try (Connection con = ConnectionUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            
+            ps.setString(1, account.getUsername());
+            ps.setString(2, account.getPassword());
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return new Account(
+                        rs.getInt("account_id"),
+                        rs.getString("username"),
+                        rs.getString("password")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 }

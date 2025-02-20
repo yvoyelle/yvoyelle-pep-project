@@ -22,7 +22,7 @@ public class SocialMediaController {
     public Javalin startAPI() {
         Javalin app = Javalin.create();
         app.post("register", this::userRegister);
-        
+
         app.post("login", this::Login);
 
         return app;
@@ -49,12 +49,15 @@ public class SocialMediaController {
     }
 
     private void Login( Context ctx){
+
         Account account =ctx.bodyAsClass(Account.class);
-        Account authUser= accountService.addUser(account);
+        Account authUser= accountService.getUser(account);
+
+
         if( authUser != null){
-            ctx.json(authUser);
+            ctx.status(200).json(authUser);
         }else{
-            ctx.status(400);
+            ctx.status(401);
         }
 
     }
