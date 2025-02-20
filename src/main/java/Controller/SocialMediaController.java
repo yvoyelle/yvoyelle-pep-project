@@ -1,5 +1,8 @@
 package Controller;
 
+import Model.Account;
+import Services.AccountService;
+import Services.MessageService;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
@@ -9,6 +12,8 @@ import io.javalin.http.Context;
  * refer to prior mini-project labs and lecture materials for guidance on how a controller may be built.
  */
 public class SocialMediaController {
+    private AccountService accountService = new AccountService();
+    private MessageService messageService= new MessageService();
     /**
      * In order for the test cases to work, you will need to write the endpoints in the startAPI() method, as the test
      * suite must receive a Javalin object from this method.
@@ -16,7 +21,9 @@ public class SocialMediaController {
      */
     public Javalin startAPI() {
         Javalin app = Javalin.create();
-        app.get("example-endpoint", this::exampleHandler);
+        app.post("register", this::userRegister);
+        
+        app.post("login", this::Login);
 
         return app;
     }
@@ -25,9 +32,30 @@ public class SocialMediaController {
      * This is an example handler for an example endpoint.
      * @param context The Javalin Context object manages information about both the HTTP request and response.
      */
-    private void exampleHandler(Context context) {
-        context.json("sample text");
+    private void userRegister(Context ctx) {
+        
+        Account account =ctx.bodyAsClass(Account.class);
+        Account accountRegistration= accountService.addUser(account);
+        
+        if(accountRegistration !=null ){
+          
+          
+            ctx.status(201).json(accountRegistration); // Success response with 201 status
+        }else {
+            ctx.status(400);
+        }
+        
+        
     }
 
+    private void Login( Context ctx){
+        Account account =ctx.bodyAsClass(Account.class);
+        Account authUser= accountService.addUser(account);
+        if( authUser != null){
+            ctx.json(authUser);
+        }else{
+            ctx.status(400);
+        }
 
+    }
 }

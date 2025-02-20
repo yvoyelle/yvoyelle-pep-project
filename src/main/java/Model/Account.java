@@ -115,4 +115,8 @@ public class Account {
                 ", password='" + password + '\'' +
                 '}';
     }
+    public int length() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'length'");
+    }
 }
