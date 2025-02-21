@@ -1,6 +1,7 @@
 package Controller;
-
+import java.util.*;
 import Model.Account;
+import Model.Message;
 import Services.AccountService;
 import Services.MessageService;
 import io.javalin.Javalin;
@@ -25,6 +26,10 @@ public class SocialMediaController {
 
         app.post("login", this::Login);
         app.post("messages", this::createMessage);
+        app.get("messages", this::SelectAllMessage);
+        app.get("messages/{message_id}", this::getMessageById);
+
+        
 
         return app;
     }
@@ -68,7 +73,7 @@ public class SocialMediaController {
         //Account account =ctx.bodyAsClass(Account.class);
         //Account createMessage= accountService.addUser(account);
         Message message = ctx.bodyAsClass(Message.class);
-       Message createMessage= messageService.createMessa(message);
+       Message createMessage= messageService.createMessage(message);
 
 
        if(createMessage !=null){
@@ -78,4 +83,20 @@ public class SocialMediaController {
        }
 
     }
+
+    public void SelectAllMessage(Context ctx) {
+        List<Message> messages = messageService.getAllMessages(); // Fetch all messages
+        ctx.json(messages); // Jackson automatically serializes the list to JSON
+    }
+    public void getMessageById(Context ctx) {
+        int messageId = Integer.parseInt(ctx.pathParam("message_id")); // Extract message_id from URL
+        Message message = messageService.getMessageById(messageId); // Call service method
+    
+        if (message != null) {
+            ctx.json(message); // Return the message as JSON
+        } else {
+            ctx.json(""); // Return an empty response if message not found
+        }
+    }
+    
 }

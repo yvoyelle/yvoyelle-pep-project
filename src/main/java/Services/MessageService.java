@@ -13,19 +13,20 @@ public class MessageService {
         messageDao= new MessageDao();
     }
 
+
     public MessageService (MessageDao messageDao){
         this.messageDao=messageDao;
     }
 
-    public boolean getAllMessage(Message message){
-
-        return messageDao.getAllMessage(message);
+    public List<Message> getAllMessages() {
+        return messageDao.getAllMessages(); // Calls DAO method to get all messages
     }
+    
 
-    public boolean getAllMessageByAccountId(Message message){
-
-        return messageDao.getAllMessageByUserAccountId(message);
+    public Message getMessageById(int messageId) {
+        return messageDao.getMessageById(messageId);
     }
+    
 
     public boolean updateMessage (Message message){
 
