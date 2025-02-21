@@ -46,15 +46,15 @@ public class Message {
      * Whem retrieving a message from the database, all fields will be needed. In that case, a constructor with all
      * fields is needed.
      * @param message_id
-     * @param posted_by
+     * @param posted_by2
      * @param message_text
-     * @param time_posted_epoch
+     * @param d
      */
-    public Message(int message_id, int posted_by, String message_text, long time_posted_epoch) {
+    public Message(int message_id, int posted_by2, String message_text, double d) {
         this.message_id = message_id;
-        this.posted_by = posted_by;
+        this.posted_by = posted_by2;
         this.message_text = message_text;
-        this.time_posted_epoch = time_posted_epoch;
+        this.time_posted_epoch = d;
     }
     /**
      * Properly named getters and setters are necessary for Jackson ObjectMapper to work. You may use them as well.
@@ -138,5 +138,9 @@ public class Message {
                 ", message_text='" + message_text + '\'' +
                 ", time_posted_epoch=" + time_posted_epoch +
                 '}';
+    }
+    public boolean isEmpty() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'isEmpty'");
     }
 }

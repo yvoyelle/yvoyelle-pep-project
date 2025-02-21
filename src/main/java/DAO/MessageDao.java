@@ -12,50 +12,58 @@ import java.sql.SQLException;
 import static Util.ConnectionUtil.getConnection;
 
 public class MessageDao {
+
     public Message createMessage(Message message) {
-        if (message.message_text.isEmpty() || message.message_text.length() > 255 || message.posted_by == 0) {
+        // Validate the message fields
+        if (message == null || message.message_text == null || message.message_text.trim().isEmpty() 
+            || message.message_text.length() > 255 || message.posted_by <= 0) {
             return null; // Validation failed
         }
     
         String sql = "INSERT INTO message (posted_by, message_text, time_posted_epoch) VALUES (?, ?, ?)";
-        
+    
         try (Connection con = ConnectionUtil.getConnection();
              PreparedStatement ps = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
     
+            // Set parameters for the prepared statement
             ps.setInt(1, message.posted_by);
             ps.setString(2, message.message_text);
             ps.setLong(3, message.time_posted_epoch);
-            int affectedRows = ps.executeUpdate();
     
-            if (affectedRows > 0) {
-                ResultSet rs = ps.getGeneratedKeys();
-                if (rs.next()) {
-                    int generatedId = rs.getInt(1);
-                    return new Message(generatedId, message.posted_by, message.message_text, message.time_posted_epoch);
+            // Execute update and get the generated keys
+            int rowsAffected = ps.executeUpdate();
+    
+            if (rowsAffected > 0) {
+                try (ResultSet pkeyResultSet = ps.getGeneratedKeys()) {
+                    if (pkeyResultSet.next()) {
+                        int generatedId = pkeyResultSet.getInt(1);  // Retrieve the generated ID
+                        // Return the new message object with the generated ID
+                        return new Message(generatedId, message.posted_by, message.message_text, message.time_posted_epoch);
+                    }
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            // Log the exception (using a logger would be ideal)
+            e.printStackTrace();  // Replace this with proper logging in production
         }
-        return null;
+        return null;  // Return null if something went wrong
     }
     
-
-
+    
     public List<Message> getAllMessages() {
         List<Message> messages = new ArrayList<>();
         String sql = "SELECT * FROM message";
-    
+
         try (Connection con = ConnectionUtil.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-    
+
             while (rs.next()) {
                 messages.add(new Message(
-                    rs.getInt("message_id"),
-                    rs.getInt("posted_by"),
-                    rs.getString("message_text"),
-                    rs.getLong("time_posted_epoch")
+                        rs.getInt("message_id"),
+                        rs.getInt("posted_by"),
+                        rs.getString("message_text"),
+                        rs.getLong("time_posted_epoch")
                 ));
             }
         } catch (SQLException e) {
@@ -63,8 +71,6 @@ public class MessageDao {
         }
         return messages; // Returns an empty list if no messages exist
     }
-    
-    
 
     public Message getMessageById(int messageId) {
         String sql = "SELECT * FROM message WHERE message_id = ?";
@@ -120,7 +126,7 @@ public class MessageDao {
     public  Message UpdateMessage( int messageId){
         PreparedStatement ps;
         Connection con=ConnectionUtil.getConnection() ;
-if()
+
         try{
             String sql= "update  message set posted_by =?, message_text =?, time_posted_epoch =? where message_id=?";
             ps = con.prepareStatement(sql);

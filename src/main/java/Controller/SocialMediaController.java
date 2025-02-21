@@ -1,5 +1,9 @@
 package Controller;
 import java.util.*;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import Model.Account;
 import Model.Message;
 import Services.AccountService;
@@ -72,21 +76,24 @@ public class SocialMediaController {
 
     }
 
-
-    public void createMessage( Context ctx){
-        //Account account =ctx.bodyAsClass(Account.class);
-        //Account createMessage= accountService.addUser(account);
-        Message message = ctx.bodyAsClass(Message.class);
-       Message createMessage= messageService.createMessage(message);
-
-
-       if(createMessage !=null){
-           ctx.status(200).json(createMessage);
-       }else{
-           ctx.status(400);
-       }
-
+    private void createMessage(Context ctx) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            Message message = mapper.readValue(ctx.body(), Message.class);  // Read the message from the request body
+            Message createdMessage = messageService.createMessage(message);  // Create the message using the service
+    
+            if (createdMessage == null) {
+                ctx.status(400);  // If creation fails, return 400 status
+            } else {
+                ctx.json(mapper.writeValueAsString(createdMessage));  // Return the created message as JSON
+                ctx.status(200); // Ensure a successful status is returned
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Log the error (or use a logger)
+            ctx.status(500).json("{\"error\": \"Internal Server Error\"}");  // Return 500 in case of error
+        }
     }
+    
 
     public void SelectAllMessage(Context ctx) {
         List<Message> messages = messageService.getAllMessages(); // Fetch all messages
@@ -113,19 +120,21 @@ public class SocialMediaController {
             ctx.status(200).json("");
         }
     }
+  
 
-  private void updateMessageById( Context ctx){
+  private void updateMessageById( Context ctx) throws JsonProcessingException{
+    ObjectMapper mapper = new ObjectMapper();
+    Message message = mapper.readValue(ctx.body(), Message.class);
+    int messageId = Integer.parseInt(ctx.pathParam  ("message_id"));
+Message updatMessage= messageService.updateMessage(messageId, message);
+System.out.println(updatMessage);
 
-    int messageid = Integer.parseInt(ctx.pathParam  ("message_id"));
-
-    Message message = messageService.updateMessage(messageid);
-
-    if(message !=null){
-    ctx.status(200).json(message);
+    if(updatMessage ==null){
+    ctx.status(400).json(message);
 
     }else{
 
-        ctx.status(400);
+        ctx.json(mapper.writeValueAsString(updatMessage));
     }
   }
 }

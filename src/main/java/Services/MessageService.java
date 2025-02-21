@@ -28,10 +28,18 @@ public class MessageService {
     }
     
 
-    public Message updateMessage (int  messageId){
+    public Message updateMessage (int  messageId, Message message){
 
-        return messageDao.UpdateMessage(messageId);
+        Message messageObj=messageDao.UpdateMessage(messageId);
+
+        return messageObj;
     }
+
+
+
+
+  
+
 
     public Message deleteMessageById(int messageId) {
         return messageDao.deleteMessage(messageId);
@@ -41,6 +49,5 @@ public class MessageService {
 
         return messageDao.createMessage(message);
     }
-
-
+  
 }
