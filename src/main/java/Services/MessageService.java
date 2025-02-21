@@ -30,7 +30,7 @@ public class MessageService {
 
     public Message updateMessage (int  messageId){
 
-        return messageDao.updateMessage(messageId, messageId, null, messageId);
+        return messageDao.UpdateMessage(messageId);
     }
 
     public Message deleteMessageById(int messageId) {

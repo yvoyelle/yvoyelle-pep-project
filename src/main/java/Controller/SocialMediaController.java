@@ -118,11 +118,10 @@ public class SocialMediaController {
 
     int messageid = Integer.parseInt(ctx.pathParam  ("message_id"));
 
-
     Message message = messageService.updateMessage(messageid);
 
     if(message !=null){
-ctx.status(200).json(message);
+    ctx.status(200).json(message);
 
     }else{
 

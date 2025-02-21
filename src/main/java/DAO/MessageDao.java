@@ -112,33 +112,27 @@ public class MessageDao {
 
         return false;
     }
-    public Message updateMessage(int messageId, int postedBy, String messageText, long timePostedEpoch) {
+   
+   
+    //The update of a message should be successful if and only if the message id already exists and 
+    //the new message_text is not blank and is not over 255 characters.
+   
+    public  Message UpdateMessage( int messageId){
         PreparedStatement ps;
-        Connection con = ConnectionUtil.getConnection();
-        
-        try {
-            String sql = "UPDATE message SET posted_by = ?, message_text = ?, time_posted_epoch = ? WHERE message_id = ?";
+        Connection con=ConnectionUtil.getConnection() ;
+if()
+        try{
+            String sql= "update  message set posted_by =?, message_text =?, time_posted_epoch =? where message_id=?";
             ps = con.prepareStatement(sql);
-    
-            // Set the values for the prepared statement
-            ps.setInt(1, postedBy);
-            ps.setString(2, messageText);
-            ps.setLong(3, timePostedEpoch);
-            ps.setInt(4, messageId);  // Set the messageId to identify the row to update
-            
-            int rowsAffected = ps.executeUpdate();
-            
-            if (rowsAffected > 0) {
-                // If the update was successful, fetch and return the updated message
-                return new Message(messageId, postedBy, messageText, timePostedEpoch);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace(); // Handle exception (e.g., logging)
+
+            ps.setInt(1,messageId);
+            ps.execute();
+
+        }catch (SQLException e){
+            e.getMessage();
         }
-        
-        return null; // If no rows were affected (i.e., message not found or not updated)
+        return  null;
     }
-    
    public Message deleteMessage(int messageId) {
     String sql = "DELETE FROM message WHERE message_id = ?";
     
