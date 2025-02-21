@@ -78,20 +78,16 @@ public class SocialMediaController {
 
     private void createMessage(Context ctx) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        try {
+        
             Message message = mapper.readValue(ctx.body(), Message.class);  // Read the message from the request body
             Message createdMessage = messageService.createMessage(message);  // Create the message using the service
     
             if (createdMessage == null) {
                 ctx.status(400);  // If creation fails, return 400 status
             } else {
-                ctx.json(mapper.writeValueAsString(createdMessage));  // Return the created message as JSON
-                ctx.status(200); // Ensure a successful status is returned
+                ctx.status(200).json(mapper.writeValueAsString(createdMessage));  // Return the created message as JSON
             }
-        } catch (Exception e) {
-            e.printStackTrace(); // Log the error (or use a logger)
-            ctx.status(00).json("{\"error\": \"Internal Server Error\"}");  // Return 500 in case of error
-        }
+     
     }
     /*
      * public void SelectAllMessage(Context ctx) {

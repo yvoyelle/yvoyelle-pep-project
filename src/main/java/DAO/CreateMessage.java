@@ -12,39 +12,45 @@ import java.sql.SQLException;
 import static Util.ConnectionUtil.getConnection;
 public class CreateMessage {
     public Message createMessage(Message message) {
-        // Validate the message fields
-        if (message == null || message.message_text == null || message.message_text.trim().isEmpty() 
+        // Validate message fields
+        if (message == null || message.message_text == null || message.message_text.trim().isEmpty()
             || message.message_text.length() > 255 || message.posted_by <= 0) {
             return null; // Validation failed
         }
     
-        String sql = "INSERT INTO message (posted_by, message_text, time_posted_epoch) VALUES (?, ?, ?)";
+        Connection con = ConnectionUtil.getConnection();
+        try {
+            // Check if posted_by (account) exists
+            String checkAccountSql = "SELECT COUNT(*) FROM account WHERE account_id = ?";
+            PreparedStatement checkPs = con.prepareStatement(checkAccountSql);
+            checkPs.setInt(1, message.posted_by);
+            ResultSet rs = checkPs.executeQuery();
+            if (rs.next() && rs.getInt(1) == 0) {
+                System.out.println("Error: User with ID " + message.posted_by + " does not exist.");
+                return null;  // Prevent inserting the message
+            }
     
-        try (Connection con = ConnectionUtil.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            // Insert message
+            String sql = "INSERT INTO message (posted_by, message_text, time_posted_epoch) VALUES (?, ?, ?)";
+            PreparedStatement ps = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
     
-            // Set parameters for the prepared statement
             ps.setInt(1, message.posted_by);
             ps.setString(2, message.message_text);
-            ps.setLong(3, message.time_posted_epoch);
+            ps.setLong(3, message.time_posted_epoch); // Use setLong for epoch time
     
-            // Execute update and get the generated keys
-            int rowsAffected = ps.executeUpdate();
+            ps.executeUpdate();
     
-            if (rowsAffected > 0) {
-                try (ResultSet pkeyResultSet = ps.getGeneratedKeys()) {
-                    if (pkeyResultSet.next()) {
-                        int generatedId = pkeyResultSet.getInt(1);  // Retrieve the generated ID
-                        // Return the new message object with the generated ID
-                        return new Message(generatedId, message.posted_by, message.message_text, message.time_posted_epoch);
-                    }
-                }
+            // Retrieve generated message ID
+            ResultSet pResultSet = ps.getGeneratedKeys();
+            if (pResultSet.next()) {
+                int generated_message_id = pResultSet.getInt(1);
+                return new Message(generated_message_id, message.posted_by, message.message_text, message.time_posted_epoch);
             }
+    
         } catch (SQLException e) {
-            // Log the exception (using a logger would be ideal)
-            e.printStackTrace();  // Replace this with proper logging in production
+            e.printStackTrace(); // Log full exception
         }
-        return null;  // Return null if something went wrong
+        return null; // Return null if something went wrong
     }
     
     
