@@ -30,10 +30,10 @@ public class SocialMediaController {
 
         app.post("login", this::Login);
         app.post("messages", this::createMessage);
-        app.get("messages", this::SelectAllMessage);
-        app.get("messages/{message_id}", this::getMessageById);
-        app.delete("messages/{message_id}", this::deleteMessageById);
-        app.patch("messages/{message_id}", this::updateMessageById);
+        //app.get("messages", this::SelectAllMessage);
+        //app.get("messages/{message_id}", this::getMessageById);
+        //app.delete("messages/{message_id}", this::deleteMessageById);
+        //app.patch("messages/{message_id}", this::updateMessageById);
 
 
         
@@ -90,12 +90,11 @@ public class SocialMediaController {
             }
         } catch (Exception e) {
             e.printStackTrace(); // Log the error (or use a logger)
-            ctx.status(500).json("{\"error\": \"Internal Server Error\"}");  // Return 500 in case of error
+            ctx.status(00).json("{\"error\": \"Internal Server Error\"}");  // Return 500 in case of error
         }
     }
-    
-
-    public void SelectAllMessage(Context ctx) {
+    /*
+     * public void SelectAllMessage(Context ctx) {
         List<Message> messages = messageService.getAllMessages(); // Fetch all messages
         ctx.json(messages); // Jackson automatically serializes the list to JSON
     }
@@ -137,4 +136,8 @@ System.out.println(updatMessage);
         ctx.json(mapper.writeValueAsString(updatMessage));
     }
   }
+     * 
+     */
+
+    
 }
