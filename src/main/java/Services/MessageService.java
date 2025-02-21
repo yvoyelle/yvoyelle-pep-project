@@ -28,12 +28,15 @@ public class MessageService {
     }
     
 
-    public boolean updateMessage (Message message){
+    public Message updateMessage (int  messageId){
 
-        return messageDao.UpdateMessage(message);
+        return messageDao.updateMessage(messageId, messageId, null, messageId);
     }
 
-
+    public Message deleteMessageById(int messageId) {
+        return messageDao.deleteMessage(messageId);
+    }
+    
     public Message createMessage(Message message){
 
         return messageDao.createMessage(message);

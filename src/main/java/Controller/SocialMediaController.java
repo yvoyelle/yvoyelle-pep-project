@@ -28,7 +28,11 @@ public class SocialMediaController {
         app.post("messages", this::createMessage);
         app.get("messages", this::SelectAllMessage);
         app.get("messages/{message_id}", this::getMessageById);
+        app.delete("messages/{message_id}", this::deleteMessageById);
+        app.patch("messages/{message_id}", this::updateMessageById);
 
+
+        
         
 
         return app;
@@ -98,5 +102,31 @@ public class SocialMediaController {
             ctx.json(""); // Return an empty response if message not found
         }
     }
+    private void deleteMessageById(Context ctx) {
+
+        int messageId = Integer.parseInt(ctx.pathParam("message_id")); // Extract message_id from URL
+        Message deleted = messageService.deleteMessageById(messageId); 
     
+        if (deleted != null) {
+            ctx.status(200).json(deleted);
+        } else {
+            ctx.status(200).json("");
+        }
+    }
+
+  private void updateMessageById( Context ctx){
+
+    int messageid = Integer.parseInt(ctx.pathParam  ("message_id"));
+
+
+    Message message = messageService.updateMessage(messageid);
+
+    if(message !=null){
+ctx.status(200).json(message);
+
+    }else{
+
+        ctx.status(400);
+    }
+  }
 }
