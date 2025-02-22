@@ -3,6 +3,7 @@ package Services;
 import DAO.CreateMessage;
 import DAO.DeleteMessage;
 import DAO.SelectAllMessage;
+import DAO.UpdateMessage;
 import DAO.selectMessaheById;
 import Model.Message;
 
@@ -14,12 +15,14 @@ public class MessageService {
 public SelectAllMessage selectAllMessageDao;
 selectMessaheById selectMessaheByIdDao;
 DeleteMessage deleteMessageDao;
+UpdateMessage updateMessageDao;
 
     public  MessageService (){
         createMessageDao= new CreateMessage();
         selectAllMessageDao= new SelectAllMessage();
         selectMessaheByIdDao=new selectMessaheById();
         deleteMessageDao = new DeleteMessage();
+        updateMessageDao = new UpdateMessage();
 
     }
 
@@ -38,12 +41,12 @@ DeleteMessage deleteMessageDao;
 }
     
 
-    //public Message updateMessage (int  messageId, Message message){
+    public Message updateMessage (int messageId, int postedBy, String messageText, long timePostedEpoch){
 
-//Message messageObj=messageDao.UpdateMessage(messageId);
+Message messageObj=updateMessageDao.UpdateMessage(messageId);
 
-     //   return messageObj;
-   //}
+       return messageObj;
+   }
 
 
 
