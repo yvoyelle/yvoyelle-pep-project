@@ -4,7 +4,7 @@ import DAO.CreateMessage;
 import DAO.DeleteMessage;
 import DAO.SelectAllMessage;
 import DAO.SelectMessagesByAccountId;
-import DAO.UpdateMessage;
+import DAO.UpdateMessageDAO;
 import DAO.selectAllMessageByUserAccountId;
 import DAO.selectMessaheById;
 import Model.Message;
@@ -17,7 +17,7 @@ public class MessageService {
 public SelectAllMessage selectAllMessageDao;
 selectMessaheById selectMessaheByIdDao;
 DeleteMessage deleteMessageDao;
-UpdateMessage updateMessageDao;
+UpdateMessageDAO updateMessageDao;
 SelectMessagesByAccountId selectMessagesByAccountIdDao;
 
     public  MessageService (){
@@ -25,7 +25,7 @@ SelectMessagesByAccountId selectMessagesByAccountIdDao;
         selectAllMessageDao= new SelectAllMessage();
         selectMessaheByIdDao=new selectMessaheById();
         deleteMessageDao = new DeleteMessage();
-        updateMessageDao = new UpdateMessage();
+        updateMessageDao = new UpdateMessageDAO();
         selectMessagesByAccountIdDao= new SelectMessagesByAccountId();
 
     }
@@ -51,20 +51,13 @@ public List<Message> SelectMessagesByAccountId(int accountId) {
 }
     
 
-public   Message updateMessage (int  messageId, Message message){
 
-  Message updateMessage =selectMessaheByIdDao.getMessageById(messageId);
-  
-       return updateMessage;
-   }
-
-   //public Flight updateFlight(int flight_id, Flight flight){
-   // Flight existingFlight = flightDAO.getFlightById(flight_id);
+public Message updateMessage(int messageId, String newMessageText) {
+    return updateMessageDao.updateMessage(messageId, newMessageText);
+}
 
 
-
-
-
+   
 
   
 

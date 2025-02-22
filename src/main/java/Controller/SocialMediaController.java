@@ -142,28 +142,39 @@ public class SocialMediaController {
     }
   
 
-  private void updateMessageById( Context ctx) throws JsonProcessingException{
-
-    ObjectMapper mapper = new ObjectMapper();
-
-    Message message = mapper.readValue(ctx.body(), Message.class);
-
-    int messageId = Integer.parseInt(ctx.pathParam  ("message_id"));
-
-Message updatMessage= messageService.updateMessage(messageId, message);
-
-System.out.println(updatMessage);
-
-    if(updatMessage !=null){
-    ctx.status(200).json(updatMessage);
-
-    }else{
-
-        ctx.status(400);
+    public void updateMessageById(Context ctx) {
+        try {
+            // Parse request body into a Map to get the new message text
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String, Object> requestBody = mapper.readValue(ctx.body(), Map.class);
+            
+            String newMessageText = (String) requestBody.get("message_text");
+    
+            // Validate message text
+            if (newMessageText == null || newMessageText.trim().isEmpty() || newMessageText.length() > 255) {
+                ctx.status(400).result("Invalid message text: It must not be empty and should not exceed 255 characters.");
+                return;
+            }
+    
+            int messageId = Integer.parseInt(ctx.pathParam("message_id"));
+    
+            // Call service to update message
+            Message updatedMessage = messageService.updateMessage(messageId, newMessageText);
+    
+            if (updatedMessage != null) {
+                ctx.status(200).json(updatedMessage);
+            } else {
+                // Message not found or update failed
+                ctx.status(400).result("Message ID not found or update failed.");
+            }
+        } catch (JsonProcessingException e) {
+            // Handle invalid JSON
+            ctx.status(400).result("Invalid JSON format.");
+        } catch (NumberFormatException e) {
+            // Handle invalid message ID
+            ctx.status(400).result("Invalid message ID format.");
+        }
     }
-  }
-     
-     
-
+    
     
 }
