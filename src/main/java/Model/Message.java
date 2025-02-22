@@ -50,7 +50,7 @@ public class Message {
      * @param message_text
      * @param d
      */
-    public Message(int message_id, int posted_by2, String message_text, double d) {
+    public Message(int message_id, int posted_by2, String message_text, long d) {
         this.message_id = message_id;
         this.posted_by = posted_by2;
         this.message_text = message_text;
@@ -139,8 +139,9 @@ public class Message {
                 ", time_posted_epoch=" + time_posted_epoch +
                 '}';
     }
-    public boolean isEmpty() {
+    /*  public boolean isEmpty() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'isEmpty'");
-    }
+    }*/
+   
 }

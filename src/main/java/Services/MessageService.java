@@ -1,6 +1,9 @@
 package Services;
 
 import DAO.CreateMessage;
+import DAO.DeleteMessage;
+import DAO.SelectAllMessage;
+import DAO.selectMessaheById;
 import Model.Message;
 
 import java.util.List;
@@ -8,9 +11,16 @@ import java.util.List;
 public class MessageService {
 
     public CreateMessage createMessageDao;
+public SelectAllMessage selectAllMessageDao;
+selectMessaheById selectMessaheByIdDao;
+DeleteMessage deleteMessageDao;
 
     public  MessageService (){
         createMessageDao= new CreateMessage();
+        selectAllMessageDao= new SelectAllMessage();
+        selectMessaheByIdDao=new selectMessaheById();
+        deleteMessageDao = new DeleteMessage();
+
     }
 
 
@@ -18,14 +28,14 @@ public class MessageService {
         this.createMessageDao=createMessageDao;
     }
 
-  //  public List<Message> getAllMessages() {
-     //   return messageDao.getAllMessages(); // Calls DAO method to get all messages
-    //}
+  public List<Message> getAllMessages() {
+        return selectAllMessageDao.getAllMessages(); // Calls DAO method to get all messages
+}
     
 
-   // public Message getMessageById(int messageId) {
-       // return messageDao.getMessageById(messageId);
-    //}
+   public Message getMessageById(int messageId) {
+       return selectMessaheByIdDao.getMessageById(messageId);
+}
     
 
     //public Message updateMessage (int  messageId, Message message){
@@ -41,9 +51,9 @@ public class MessageService {
   
 
 
-    //public Message deleteMessageById(int messageId) {
-      //  return messageDao.deleteMessage(messageId);
-   // }
+    public Message deleteMessageById(int messageId) {
+       return deleteMessageDao.deleteMessageById(messageId);
+   }
     
     public Message createMessage(Message message){
 

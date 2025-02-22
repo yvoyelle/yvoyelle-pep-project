@@ -11,8 +11,11 @@ import java.sql.SQLException;
 
 import static Util.ConnectionUtil.getConnection;
 public class SelectAllMessage {
+
     public List<Message> getAllMessages() {
+
         List<Message> messages = new ArrayList<>();
+        
         String sql = "SELECT * FROM message";
 
         try (Connection con = ConnectionUtil.getConnection();

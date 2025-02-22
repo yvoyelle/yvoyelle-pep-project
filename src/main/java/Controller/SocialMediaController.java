@@ -30,9 +30,9 @@ public class SocialMediaController {
 
         app.post("login", this::Login);
         app.post("messages", this::createMessage);
-        //app.get("messages", this::SelectAllMessage);
-        //app.get("messages/{message_id}", this::getMessageById);
-        //app.delete("messages/{message_id}", this::deleteMessageById);
+        app.get("messages", this::SelectAllMessage);
+        app.get("messages/{message_id}", this::getMessageById);
+        app.delete("messages/{message_id}", this::deleteMessageById);
         //app.patch("messages/{message_id}", this::updateMessageById);
 
 
@@ -89,12 +89,24 @@ public class SocialMediaController {
             }
      
     }
-    /*
-     * public void SelectAllMessage(Context ctx) {
+    
+      public void SelectAllMessage(Context ctx) {
+
         List<Message> messages = messageService.getAllMessages(); // Fetch all messages
-        ctx.json(messages); // Jackson automatically serializes the list to JSON
+        if (messages != null ){
+            ctx.status(200).json(messages); // Jackson automatically serializes the list to JSON
+
+        }else{
+
+            ctx.status(401);
+ 
+        }
+        
     }
+
+    
     public void getMessageById(Context ctx) {
+
         int messageId = Integer.parseInt(ctx.pathParam("message_id")); // Extract message_id from URL
         Message message = messageService.getMessageById(messageId); // Call service method
     
@@ -104,6 +116,9 @@ public class SocialMediaController {
             ctx.json(""); // Return an empty response if message not found
         }
     }
+
+
+    
     private void deleteMessageById(Context ctx) {
 
         int messageId = Integer.parseInt(ctx.pathParam("message_id")); // Extract message_id from URL
@@ -116,7 +131,7 @@ public class SocialMediaController {
         }
     }
   
-
+/* 
   private void updateMessageById( Context ctx) throws JsonProcessingException{
     ObjectMapper mapper = new ObjectMapper();
     Message message = mapper.readValue(ctx.body(), Message.class);

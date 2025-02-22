@@ -11,6 +11,7 @@ import java.sql.SQLException;
 
 import static Util.ConnectionUtil.getConnection;
 public class CreateMessage {
+    Account account ;
     public Message createMessage(Message message) {
         // Validate message fields
         if (message == null || message.message_text == null || message.message_text.trim().isEmpty()
@@ -20,7 +21,7 @@ public class CreateMessage {
     
         Connection con = ConnectionUtil.getConnection();
         try {
-            // Check if posted_by (account) exists
+            /*// Check if posted_by (account) exists
             String checkAccountSql = "SELECT COUNT(*) FROM account WHERE account_id = ?";
             PreparedStatement checkPs = con.prepareStatement(checkAccountSql);
             checkPs.setInt(1, message.posted_by);
@@ -28,7 +29,7 @@ public class CreateMessage {
             if (rs.next() && rs.getInt(1) == 0) {
                 System.out.println("Error: User with ID " + message.posted_by + " does not exist.");
                 return null;  // Prevent inserting the message
-            }
+            } */
     
             // Insert message
             String sql = "INSERT INTO message (posted_by, message_text, time_posted_epoch) VALUES (?, ?, ?)";
@@ -48,8 +49,7 @@ public class CreateMessage {
             }
     
         } catch (SQLException e) {
-            e.printStackTrace(); // Log full exception
-        }
+System.out.println(e.getMessage());        }
         return null; // Return null if something went wrong
     }
     
@@ -71,7 +71,7 @@ public class CreateMessage {
                 ));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
         return messages; // Returns an empty list if no messages exist
     }
