@@ -34,6 +34,9 @@ public class SocialMediaController {
         app.get("messages/{message_id}", this::getMessageById);
         app.delete("messages/{message_id}", this::deleteMessageById);
         app.patch("messages/{message_id}", this::updateMessageById);
+        app.get("accounts/{account_id}/messages", this::SelectMessagesByAccountId);
+
+        
 
 
         
@@ -106,7 +109,7 @@ public class SocialMediaController {
 
     
     public void getMessageById(Context ctx) {
-
+        
         int messageId = Integer.parseInt(ctx.pathParam("message_id")); // Extract message_id from URL
         Message message = messageService.getMessageById(messageId); // Call service method
     
@@ -117,7 +120,14 @@ public class SocialMediaController {
         }
     }
 
-
+    public void SelectMessagesByAccountId(Context ctx) {
+        int accountId = Integer.parseInt(ctx.pathParam("account_id")); // Extract account_id from URL
+    
+        List<Message> messages = messageService.SelectMessagesByAccountId(accountId); // Retrieve messages
+    
+        ctx.status(200).json(messages); // Always return 200 with a list (empty if no messages)
+    }
+    
     
     private void deleteMessageById(Context ctx) {
 
@@ -140,16 +150,16 @@ public class SocialMediaController {
 
     int messageId = Integer.parseInt(ctx.pathParam  ("message_id"));
 
-Message updatMessage= messageService.deleteMessageById(messageId);
+Message updatMessage= messageService.updateMessage(messageId, message);
 
 System.out.println(updatMessage);
 
     if(updatMessage !=null){
-    ctx.status(200).json(message);
+    ctx.status(200).json(updatMessage);
 
     }else{
 
-        ctx.status(400).json(mapper.writeValueAsString(updatMessage));
+        ctx.status(400);
     }
   }
      

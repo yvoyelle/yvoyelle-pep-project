@@ -12,23 +12,42 @@ import java.sql.SQLException;
 import static Util.ConnectionUtil.getConnection;
 public class UpdateMessage {
     
-    //The update of a message should be successful if and only if the message id already exists and 
-    //the new message_text is not blank and is not over 255 characters.
-   
-    public  Message UpdateMessage( int messageId){
-        PreparedStatement ps;
-        Connection con=ConnectionUtil.getConnection() ;
+    public Message UpdateMessage(int messageId, Message message) {
 
-        try{
-            String sql= "update  message set posted_by =?, message_text =?, time_posted_epoch =? where message_id=?";
-            ps = con.prepareStatement(sql);
-
-            ps.setInt(1,messageId);
-            ps.execute();
-
-        }catch (SQLException e){
-            e.getMessage();
+        // Validation for the message object and message_text
+        if (message == null || message.message_text == null || message.message_text.trim().isEmpty() 
+            || message.message_text.length() > 255 || message.posted_by <= 0) {
+            return null; // Validation failed, return null
+        }else{
+            PreparedStatement ps;
+            Connection con = ConnectionUtil.getConnection();
+            Message updatedMessage = null;
+        
+            try {
+                // Prepare the SQL query for updating the message
+                String sql = "UPDATE message SET posted_by = ?, message_text = ?, time_posted_epoch = ? WHERE message_id = ?";
+                ps = con.prepareStatement(sql);
+        
+                // Set the values for the prepared statement
+                ps.setInt(1, message.posted_by);
+                ps.setString(2, message.message_text);
+                ps.setLong(3, message.time_posted_epoch);
+                ps.setInt(4, messageId);
+        
+                // Execute the update
+                int rowsAffected = ps.executeUpdate();
+        
+                // If the update was successful, retrieve the updated message
+                if (rowsAffected > 0) {
+                }
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+        
+            return updatedMessage;  // Return the updated message if successful, or null if failed
         }
-        return  null;
-    }
+        
+        }
+    
+       
 }
