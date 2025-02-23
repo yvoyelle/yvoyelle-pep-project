@@ -11,10 +11,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SelectMessagesByAccountId {
-
+    /*
+     * ## 8: Our API should be able to retrieve all messages written by a particular
+     * user.
+     * 
+     * As a user, I should be able to submit a GET request on the endpoint GET
+     * localhost:8080/accounts/{account_id}/messages.
+     * 
+     * - The response body should contain a JSON representation of a list containing
+     * all messages posted by a particular user, which is retrieved from the
+     * database. It is expected for the list to simply be empty if there are no
+     * messages. The response status should always be 200, which is the default.
+     */
     public List<Message> SelectMessagesByAccountId(int accountId) {
-        String sql = "SELECT * FROM message WHERE posted_by = ?";
         List<Message> messages = new ArrayList<>();
+
+
+        // ***************************************************************************************
+        //  Retrieve all message by account Id
+        // ************************************************************************************
+
+        String sql = "SELECT * FROM message WHERE posted_by = ?";
 
         try (Connection con = ConnectionUtil.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -22,7 +39,7 @@ public class SelectMessagesByAccountId {
             ps.setInt(1, accountId);
             ResultSet rs = ps.executeQuery();
     
-            while (rs.next()) { // Fetch all messages
+            while (rs.next()) { 
                 messages.add(new Message(
                     rs.getInt("message_id"),
                     rs.getInt("posted_by"),
@@ -33,6 +50,6 @@ public class SelectMessagesByAccountId {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return messages; // Return the list of messages (empty if none found)
+        return messages; 
     }
 }
