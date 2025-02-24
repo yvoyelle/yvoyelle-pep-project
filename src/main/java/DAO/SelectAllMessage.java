@@ -30,7 +30,7 @@ public class SelectAllMessage {
         List<Message> messages = new ArrayList<>();
         
         // ***************************************************************************************
-        //  Retrieve all message
+        //  Retrieve all messages
         // ************************************************************************************
 
         String sql = "SELECT * FROM message";
@@ -47,6 +47,7 @@ public class SelectAllMessage {
                         rs.getLong("time_posted_epoch")));
             }
         } catch (SQLException e) {
+            System.out.println(e.getMessage());
             e.printStackTrace();
         }
         return messages; 

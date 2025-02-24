@@ -29,7 +29,7 @@ public class SelectmessageByMesssageIdDAO {
         List<Message> messages = new ArrayList<>();
 
         // ***************************************************************************************
-        // Retrieve all message by message Id
+        // Retrieve all messages by message Id
         // ************************************************************************************
 
         String sql = "SELECT * FROM message WHERE message_id = ?";
@@ -48,6 +48,7 @@ public class SelectmessageByMesssageIdDAO {
                         rs.getLong("time_posted_epoch"));
             }
         } catch (SQLException e) {
+            System.out.println(e.getMessage());
             e.printStackTrace();
         }
         return null; 

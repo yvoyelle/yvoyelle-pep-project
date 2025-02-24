@@ -28,7 +28,7 @@ public class SelectMessagesByAccountId {
 
 
         // ***************************************************************************************
-        //  Retrieve all message by account Id
+        //  Retrieve all messages by account Id
         // ************************************************************************************
 
         String sql = "SELECT * FROM message WHERE posted_by = ?";
@@ -48,6 +48,7 @@ public class SelectMessagesByAccountId {
                 ));
             }
         } catch (SQLException e) {
+            System.out.println(e.getMessage());
             e.printStackTrace();
         }
         return messages; 

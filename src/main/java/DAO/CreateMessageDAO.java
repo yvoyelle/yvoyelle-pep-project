@@ -46,7 +46,7 @@ public class CreateMessageDAO {
         try {
 
             // ***************************************************************************************
-            // if message are valided  Insert new meesage
+            // if message is valid Insert new meesage
             // ************************************************************************************
              String sql = "INSERT INTO message (posted_by, message_text, time_posted_epoch) VALUES (?, ?, ?)";
             PreparedStatement ps = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);

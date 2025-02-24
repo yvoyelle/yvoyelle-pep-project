@@ -35,15 +35,15 @@ public class DeleteMessageDAO {
 
         try {
             // ***************************************************************************************
-            // lest Retrieve the message by id before deletion
+            // Les't Retrieve the message by id before deletion
             // ************************************************************************************
 
             String sql = "SELECT * FROM message WHERE message_id = ?";
 
-            PreparedStatement selectMessage = con.prepareStatement(sql);
+            PreparedStatement ps_select = con.prepareStatement(sql);
 
-            selectMessage.setInt(1, messageId);
-            ResultSet rs = selectMessage.executeQuery();
+            ps_select.setInt(1, messageId);
+            ResultSet rs = ps_select.executeQuery();
 
             if (rs.next()) {
                 messageToDelete = new Message(
@@ -60,11 +60,11 @@ public class DeleteMessageDAO {
 
             String sqlDelete = "DELETE FROM message WHERE message_id = ?";
 
-            PreparedStatement ps = con.prepareStatement(sqlDelete);
+            PreparedStatement ps_delete = con.prepareStatement(sqlDelete);
 
-            ps.setInt(1, messageId);
+            ps_delete.setInt(1, messageId);
 
-            ps.executeUpdate();
+            ps_delete.executeUpdate();
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
