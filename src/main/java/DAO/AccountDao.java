@@ -50,7 +50,7 @@ public class AccountDao {
             // Les't Check if the user already exists before created
             // ***************************************************************************************
 
-            String checkIfUserExist = "SELECT COUNT(*) FROM account WHERE username = ?";
+            String checkIfUserExist = "SELECT EXISTS (SELECT 1 FROM account WHERE username = ?)";
             ps = con.prepareStatement(checkIfUserExist);
 
             ps.setString(1, account.getUsername());
